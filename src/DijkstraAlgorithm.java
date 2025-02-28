@@ -40,7 +40,7 @@ public class DijkstraAlgorithm {
         System.out.println("Path: " + path);
     }
 
-    void dijkstraRegular(int source, int destination) {
+    void runRegular(int source, int destination) {
         PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(n -> n.weight));
         int[] shortestDistances = new int[numVertices];
         int[] previousVertices = new int[numVertices];
@@ -68,7 +68,7 @@ public class DijkstraAlgorithm {
         printResults(shortestDistances, previousVertices, source, destination);
     }
 
-    public void dijkstraMulthithreaded(int source, int destination) {
+    public void runMulthithreaded(int source, int destination) {
         PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(n -> n.weight));
         int[] shortestDistances = new int[numVertices];
         int[] previousVertices = new int[numVertices];
