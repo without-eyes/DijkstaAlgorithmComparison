@@ -10,15 +10,16 @@ public class Main {
         int choice = myObj.nextInt();
 
         DijkstraAlgorithm dijkstraAlgorithm;
+        int numVertices;
+        Random rand = new Random();
         if (choice == 1) {
             System.out.print("Enter number of vertices: ");
-            int numVertices = myObj.nextInt();
+            numVertices = myObj.nextInt();
             dijkstraAlgorithm = new DijkstraAlgorithm(numVertices);
 
             System.out.print("Do you want to save into file(1 for yes, else for no): ");
             choice = myObj.nextInt();
 
-            Random rand = new Random();
             if (choice == 1) {
                 BufferedWriter writer = new BufferedWriter(new FileWriter("inputData.txt"));
                 writer.write(String.valueOf(numVertices));
@@ -49,7 +50,7 @@ public class Main {
         } else {
             BufferedReader reader = new BufferedReader(new FileReader("inputData.txt"));
             String line = reader.readLine();
-            int numVertices = Integer.parseInt(line.trim());
+            numVertices = Integer.parseInt(line.trim());
             dijkstraAlgorithm = new DijkstraAlgorithm(numVertices);
 
             while ((line = reader.readLine()) != null) {
@@ -64,16 +65,17 @@ public class Main {
         }
 
         // run dijkstra algorithm without multithreading
+        int destination = rand.nextInt(numVertices) + 1;
         long startTime = System.nanoTime();
         System.out.println("\nDijkstra's algorithm without multithreading: ");
-        dijkstraAlgorithm.runRegular(0, 5);
+        dijkstraAlgorithm.runRegular(0, destination);
         long regularEstimatedTime = System.nanoTime() - startTime;
         System.out.println("Estimated time: " + regularEstimatedTime);
 
         // run dijkstra algorithm with multithreading
         startTime = System.nanoTime();
         System.out.println("\nDijkstra's algorithm with multithreading: ");
-        dijkstraAlgorithm.runMulthithreaded(0, 5);
+        dijkstraAlgorithm.runMulthithreaded(0, destination);
         long multithreadedEstimatedTime = System.nanoTime() - startTime;
         System.out.println("Estimated time: " + multithreadedEstimatedTime);
 
