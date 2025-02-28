@@ -28,7 +28,7 @@ public class Main {
                 for (int i = 0; i < numVertices; i++) {
                     for (int j = i + 1; j < numVertices; j++) {
                         if (rand.nextInt(2) == 1) {
-                            int weight = rand.nextInt(10) + 1;
+                            int weight = rand.nextInt(numVertices + 10) + 1;
                             dijkstraAlgorithm.addEdge(i, j, weight);
                             writer.write(i + "\t" + j + "\t" + weight);
                             writer.newLine();
@@ -41,7 +41,7 @@ public class Main {
                 for (int i = 0; i < numVertices; i++) {
                     for (int j = i + 1; j < numVertices; j++) {
                         if (rand.nextInt(2) == 1) {
-                            int weight = rand.nextInt(10) + 1;
+                            int weight = rand.nextInt(numVertices + 10) + 1;
                             dijkstraAlgorithm.addEdge(i, j, weight);
                         }
                     }
