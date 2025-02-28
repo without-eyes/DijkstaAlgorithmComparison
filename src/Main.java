@@ -13,12 +13,17 @@ public class Main {
 
         System.out.println("Dijksta's algorithm without multithreading: ");
         g.dijkstraRegular(0, 5);
-        System.out.println("Estimated time: " + (System.nanoTime() - startTime));
+        long regularEstimatedTime = System.nanoTime() - startTime;
+        System.out.println("Estimated time: " + regularEstimatedTime);
 
         // run dijkstra algorithm with multithreading
-
+        startTime = System.nanoTime();
+        System.out.println("\nDijksta's algorithm with multithreading: ");
+        g.dijkstraMulthithreaded(0, 5);
+        long multithreadedEstimatedTime = System.nanoTime() - startTime;
+        System.out.println("Estimated time: " + multithreadedEstimatedTime);
 
         // print results
-
+        System.out.println("\nMulthithreaded Dijkstra's algorithm is " + (float)multithreadedEstimatedTime / regularEstimatedTime * 100 + "% faster than regular.");
     }
 }

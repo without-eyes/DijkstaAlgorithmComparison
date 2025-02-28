@@ -1,4 +1,7 @@
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DijkstraAlgorithm {
     private final int numVertices;
@@ -61,6 +64,52 @@ public class DijkstraAlgorithm {
                 }
             }
         }
+
+        printResults(shortestDistances, previousVertices, source, destination);
+    }
+
+    public void dijkstraMulthithreaded(int source, int destination) {
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(n -> n.weight));
+        int[] shortestDistances = new int[numVertices];
+        int[] previousVertices = new int[numVertices];
+
+        Arrays.fill(shortestDistances, Integer.MAX_VALUE);
+        Arrays.fill(previousVertices, -1);
+        shortestDistances[source] = 0;
+        priorityQueue.add(new Node(source, 0));
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        while (!priorityQueue.isEmpty()) {
+            Node node = priorityQueue.poll();
+            int currentVertex = node.vertex;
+
+            List<Callable<Void>> tasks = new ArrayList<>();
+            for (Node neighbor : adjacencyList.get(currentVertex)) {
+                final int adjacentVertex = neighbor.vertex;
+                final int weight = neighbor.weight;
+                tasks.add(() -> {
+                    if (shortestDistances[currentVertex] + weight < shortestDistances[adjacentVertex]) {
+                        synchronized (this) {
+                            if (shortestDistances[currentVertex] + weight < shortestDistances[adjacentVertex]) {
+                                shortestDistances[adjacentVertex] = shortestDistances[currentVertex] + weight;
+                                previousVertices[adjacentVertex] = currentVertex;
+                                priorityQueue.add(new Node(adjacentVertex, shortestDistances[adjacentVertex]));
+                            }
+                        }
+                    }
+                    return null;
+                });
+            }
+
+            try {
+                executorService.invokeAll(tasks);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        executorService.shutdown();
 
         printResults(shortestDistances, previousVertices, source, destination);
     }
