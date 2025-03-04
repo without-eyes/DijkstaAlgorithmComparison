@@ -75,11 +75,11 @@ public class Main {
         // run dijkstra algorithm with multithreading
         startTime = System.nanoTime();
         System.out.println("\nDijkstra's algorithm with multithreading: ");
-        dijkstraAlgorithm.runMulthithreaded(0, destination);
+        dijkstraAlgorithm.runMultithreaded(0, destination);
         long multithreadedEstimatedTime = System.nanoTime() - startTime;
         System.out.println("Estimated time: " + multithreadedEstimatedTime);
 
         // print results
-        System.out.println("\nMultithreaded Dijkstra's algorithm is " + (float)multithreadedEstimatedTime / regularEstimatedTime * 100 + "% faster than regular.");
+        System.out.println("\nMultithreaded Dijkstra's algorithm is " + (float)regularEstimatedTime / multithreadedEstimatedTime * 100 + "% faster than regular.");
     }
 }
