@@ -40,7 +40,17 @@ class DijkstraAlgorithm {
         System.out.println("Path: " + path);
     }
 
+    void printMemoryUsage() {
+        Runtime runtime = Runtime.getRuntime();
+        long totalMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        long usedMemory = totalMemory - freeMemory;
+        System.out.println("Used memory: " + usedMemory / 1024 / 1024 + " MB");
+    }
+
     void runRegular(int source, int destination) {
+        printMemoryUsage();
+
         PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(n -> n.weight));
         int[] shortestDistances = new int[numVertices];
         int[] previousVertices = new int[numVertices];
@@ -65,9 +75,13 @@ class DijkstraAlgorithm {
         }
 
         printResults(shortestDistances, previousVertices, source, destination);
+
+        printMemoryUsage();
     }
 
     public void runAllVerticesMultithreaded(int source, int destination) {
+        printMemoryUsage();
+
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         PriorityBlockingQueue<Node> priorityQueue = new PriorityBlockingQueue<>(numVertices, Comparator.comparingInt(n -> n.weight));
         int[] shortestDistances = new int[numVertices];
@@ -109,11 +123,14 @@ class DijkstraAlgorithm {
 
         executor.shutdown();
         printResults(shortestDistances, previousVertices, source, destination);
+
+        printMemoryUsage();
     }
 
     void runFirstNeighboursMultithreaded(int source, int destination) {
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        printMemoryUsage();
 
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(n -> n.weight));
         int[] shortestDistances = new int[numVertices];
         int[] previousVertices = new int[numVertices];
@@ -171,5 +188,7 @@ class DijkstraAlgorithm {
         }
 
         printResults(shortestDistances, previousVertices, source, destination);
+
+        printMemoryUsage();
     }
 }
