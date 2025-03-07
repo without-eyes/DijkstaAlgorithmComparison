@@ -110,4 +110,66 @@ class DijkstraAlgorithm {
         executor.shutdown();
         printResults(shortestDistances, previousVertices, source, destination);
     }
+
+    void runFirstNeighboursMultithreaded(int source, int destination) {
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(n -> n.weight));
+        int[] shortestDistances = new int[numVertices];
+        int[] previousVertices = new int[numVertices];
+        boolean[] visited = new boolean[numVertices];
+
+        Arrays.fill(shortestDistances, Integer.MAX_VALUE);
+        Arrays.fill(previousVertices, -1);
+        shortestDistances[source] = 0;
+        priorityQueue.add(new Node(source, 0));
+
+        List<Future<Void>> futures = new ArrayList<>();
+
+        for (Node neighbor : adjacencyList.get(source)) {
+            Future<Void> future = executor.submit(() -> {
+                int adjacentVertex = neighbor.vertex;
+                int weight = neighbor.weight;
+                synchronized (shortestDistances) {
+                    if (shortestDistances[source] + weight < shortestDistances[adjacentVertex]) {
+                        shortestDistances[adjacentVertex] = shortestDistances[source] + weight;
+                        previousVertices[adjacentVertex] = source;
+                        priorityQueue.add(new Node(adjacentVertex, shortestDistances[adjacentVertex]));
+                    }
+                }
+                return null;
+            });
+            futures.add(future);
+        }
+
+        try {
+            for (Future<Void> future : futures) {
+                future.get();
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        executor.shutdown();
+
+        while (!priorityQueue.isEmpty()) {
+            Node node = priorityQueue.poll();
+            int currentVertex = node.vertex;
+            if (visited[currentVertex]) continue;
+            visited[currentVertex] = true;
+
+            for (Node neighbor : adjacencyList.get(currentVertex)) {
+                int adjacentVertex = neighbor.vertex;
+                int weight = neighbor.weight;
+
+                if (shortestDistances[currentVertex] + weight < shortestDistances[adjacentVertex]) {
+                    shortestDistances[adjacentVertex] = shortestDistances[currentVertex] + weight;
+                    previousVertices[adjacentVertex] = currentVertex;
+                    priorityQueue.add(new Node(adjacentVertex, shortestDistances[adjacentVertex]));
+                }
+            }
+        }
+
+        printResults(shortestDistances, previousVertices, source, destination);
+    }
 }
