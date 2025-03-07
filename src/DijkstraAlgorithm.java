@@ -21,6 +21,10 @@ class DijkstraAlgorithm {
         }
     }
 
+    int getNumVertices() {
+        return numVertices;
+    }
+
     void addEdge(int start, int end, int weight) {
         adjacencyList.get(start).add(new Node(end, weight));
         adjacencyList.get(end).add(new Node(start, weight));
