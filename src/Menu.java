@@ -14,7 +14,7 @@ class Menu {
             if (choice == 1) {
                 return generateRandomData();
             } else if (choice == 2) {
-                return readDataFromFile();
+                return FileHandler.readFromFile();
             } else {
                 System.out.println("Invalid choice. Please enter 1 or 2.");
             }
@@ -45,15 +45,6 @@ class Menu {
                     dijkstraAlgorithm.addEdge(i, j, weight);
                 }
             }
-        }
-    }
-
-    private DijkstraAlgorithm readDataFromFile() {
-        try {
-            return FileHandler.readFromFile();
-        } catch (IOException e) {
-            System.out.println("Failed to read file. Please try again.");
-            return readDataFromFile();
         }
     }
 }
