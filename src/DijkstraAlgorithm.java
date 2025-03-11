@@ -30,6 +30,10 @@ class DijkstraAlgorithm {
         adjacencyList.get(end).add(new Node(start, weight));
     }
 
+    public boolean hasEdge(int i, int j) {
+        return adjacencyList.get(i).stream().anyMatch(n -> n.vertex == j);
+    }
+
     void printResults(int[] shortestDistances, int[] previousVertices, int source, int destination) {
         List<Integer> path = new ArrayList<>();
         for (int currentVertex = destination; currentVertex != -1; currentVertex = previousVertices[currentVertex]) {

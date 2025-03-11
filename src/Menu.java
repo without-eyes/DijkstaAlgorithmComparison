@@ -38,12 +38,16 @@ class Menu {
     }
 
     private void generateEdges(DijkstraAlgorithm dijkstraAlgorithm, int numVertices) {
-        for (int i = 0; i < numVertices; i++) {
-            for (int j = i + 1; j < numVertices; j++) {
-                if (rand.nextInt(2) == 1) {
-                    int weight = rand.nextInt(numVertices + 10) + 1;
-                    dijkstraAlgorithm.addEdge(i, j, weight);
-                }
+        Random rand = new Random();
+        int maxEdges = numVertices * (numVertices - 1) / 6;
+        int edgeCount = rand.nextInt(maxEdges) + numVertices;
+
+        for (int k = 0; k < edgeCount; k++) {
+            int i = rand.nextInt(numVertices);
+            int j = rand.nextInt(numVertices);
+            if (i != j && !dijkstraAlgorithm.hasEdge(i, j)) {
+                int weight = rand.nextInt(numVertices + 10) + 1;
+                dijkstraAlgorithm.addEdge(i, j, weight);
             }
         }
     }
